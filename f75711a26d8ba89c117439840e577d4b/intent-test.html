@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeWallet Deep Link Tests</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #007bff;
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .danger-button {
+            background: #dc3545;
+        }
+        .ios-button {
+            background: #28a745;
+        }
+        .code {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 10px;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 12px;
+            margin: 10px 0;
+        }
+        .result {
+            background: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛡️ SafeWallet Deep Link Vulnerability Tests</h1>
+        
+        <div class="test-section">
+            <h3>🚀 Onboarding Screen Launch</h3>
+            <p>Test launching the onboarding screen through deep links.</p>
+            <button class="test-button" onclick="testOnboarding()">Test Onboarding</button>
+            <button class="test-button" onclick="testOnboardingIntent()">Test Intent URI</button>
+        </div>
+
+        <div class="test-section">
+            <h3>📁 Import Legacy Data (iOS Only)</h3>
+            <p>Test the iOS-only import legacy data functionality.</p>
+            <button class="test-button ios-button" onclick="testImportLegacyData()">Test Import Data</button>
+            <button class="test-button ios-button" onclick="testImportLegacyDataIntent()">Test Intent URI</button>
+        </div>
+
+        <div class="test-section">
+            <h3>🔑 Import Private Key</h3>
+            <p>Test the import private key functionality.</p>
+            <button class="test-button danger-button" onclick="testImportPrivateKey()">Test Import Key</button>
+            <button class="test-button danger-button" onclick="testImportPrivateKeyIntent()">Test Intent URI</button>
+        </div>
+
+        <div class="test-section">
+            <h3>✍️ Sign Transaction</h3>
+            <p>Test the sign transaction functionality.</p>
+            <button class="test-button danger-button" onclick="testSignTransaction()">Test Sign Transaction</button>
+            <button class="test-button danger-button" onclick="testSignTransactionIntent()">Test Intent URI</button>
+        </div>
+
+        <div class="test-section">
+            <h3>🔗 Additional Routes</h3>
+            <p>Test various other deep link routes.</p>
+            <button class="test-button" onclick="testConfirmTransaction()">Confirm Transaction</button>
+            <button class="test-button" onclick="testActionDetails()">Action Details</button>
+            <button class="test-button" onclick="testTransactionParameters()">Transaction Parameters</button>
+            <button class="test-button" onclick="testContact()">Contact</button>
+            <button class="test-button" onclick="testSigners()">Signers</button>
+        </div>
+
+        <div class="test-section">
+            <h3>⚙️ Custom Parameters</h3>
+            <p>Test with custom parameters.</p>
+            <input type="text" id="customTxId" placeholder="Transaction ID" style="width: 100%; margin: 5px 0; padding: 5px;">
+            <input type="text" id="customSignerAddress" placeholder="Signer Address" style="width: 100%; margin: 5px 0; padding: 5px;">
+            <button class="test-button" onclick="testCustomParameters()">Test Custom Parameters</button>
+        </div>
+
+        <div id="result" class="result">Click any test button to see results...</div>
+    </div>
+
+    <script>
+        function logResult(message) {
+            const resultDiv = document.getElementById('result');
+            const timestamp = new Date().toLocaleTimeString();
+            resultDiv.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+            console.log(message);
+        }
+
+        function testOnboarding() {
+            const deepLink = 'myapp://onboarding';
+            window.location.href = deepLink;
+            logResult('✅ Onboarding deep link triggered: ' + deepLink);
+        }
+
+        function testOnboardingIntent() {
+            const intentUri = 'intent://onboarding#Intent;scheme=myapp;package=global.safe.mobileapp.dev;end';
+            window.location.href = intentUri;
+            logResult('✅ Onboarding intent URI triggered: ' + intentUri);
+        }
+
+        function testImportLegacyData() {
+            const deepLink = 'myapp://import-data';
+            window.location.href = deepLink;
+            logResult('✅ Import legacy data deep link triggered: ' + deepLink);
+        }
+
+        function testImportLegacyDataIntent() {
+            const intentUri = 'intent://import-data#Intent;scheme=myapp;package=global.safe.mobileapp.dev;end';
+            window.location.href = intentUri;
+            logResult('✅ Import legacy data intent URI triggered: ' + intentUri);
+        }
+
+        function testImportPrivateKey() {
+            const deepLink = 'myapp://import-signers/private-key';
+            window.location.href = deepLink;
+            logResult('✅ Import private key deep link triggered: ' + deepLink);
+        }
+
+        function testImportPrivateKeyIntent() {
+            const intentUri = 'intent://import-signers/private-key#Intent;scheme=myapp;package=global.safe.mobileapp.dev;end';
+            window.location.href = intentUri;
+            logResult('✅ Import private key intent URI triggered: ' + intentUri);
+        }
+
+        function testSignTransaction() {
+            const deepLink = 'myapp://sign-transaction?txId=0xa2eef439a3e1fb47fac4b3377bcca853a8e9e501fcdd171b4f46457a5feabaf0&signerAddress=0x0CE7910b4eF24a5Caf13186fCb108c9fbcE57B08';
+            window.location.href = deepLink;
+            logResult('✅ Sign transaction deep link triggered: ' + deepLink);
+        }
+
+        function testSignTransactionIntent() {
+            const intentUri = 'intent://sign-transaction?txId=0xa2eef439a3e1fb47fac4b3377bcca853a8e9e501fcdd171b4f46457a5feabaf0&signerAddress=0x0CE7910b4eF24a5Caf13186fCb108c9fbcE57B08#Intent;scheme=myapp;package=global.safe.mobileapp.dev;end';
+            window.location.href = intentUri;
+            logResult('✅ Sign transaction intent URI triggered: ' + intentUri);
+        }
+
+        function testConfirmTransaction() {
+            const deepLink = 'myapp://confirm-transaction?txId=0x1234567890abcdef';
+            window.location.href = deepLink;
+            logResult('✅ Confirm transaction deep link triggered: ' + deepLink);
+        }
+
+        function testActionDetails() {
+            const deepLink = 'myapp://action-details?txId=0x1234567890abcdef&action=transfer&actionName=Send%20Tokens';
+            window.location.href = deepLink;
+            logResult('✅ Action details deep link triggered: ' + deepLink);
+        }
+
+        function testTransactionParameters() {
+            const deepLink = 'myapp://transaction-parameters?txId=0x1234567890abcdef';
+            window.location.href = deepLink;
+            logResult('✅ Transaction parameters deep link triggered: ' + deepLink);
+        }
+
+        function testContact() {
+            const deepLink = 'myapp://contact?mode=edit&address=0x1234567890abcdef';
+            window.location.href = deepLink;
+            logResult('✅ Contact deep link triggered: ' + deepLink);
+        }
+
+        function testSigners() {
+            const deepLink = 'myapp://signers/0x0CE7910b4eF24a5Caf13186fCb108c9fbcE57B08';
+            window.location.href = deepLink;
+            logResult('✅ Signers deep link triggered: ' + deepLink);
+        }
+
+        function testCustomParameters() {
+            const txId = document.getElementById('customTxId').value || '0x1234567890abcdef';
+            const signerAddress = document.getElementById('customSignerAddress').value || '0x0CE7910b4eF24a5Caf13186fCb108c9fbcE57B08';
+            
+            const deepLink = `myapp://sign-transaction?txId=${encodeURIComponent(txId)}&signerAddress=${encodeURIComponent(signerAddress)}`;
+            window.location.href = deepLink;
+            logResult('✅ Custom parameters deep link triggered: ' + deepLink);
+        }
+
+        // Initialize
+        logResult('🚀 SafeWallet Deep Link Test Suite Loaded');
+        logResult('📱 Platform: ' + navigator.platform);
+        logResult('⚠️ For security research only!');
+    </script>
+</body>
+</html>
